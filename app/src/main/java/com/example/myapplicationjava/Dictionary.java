@@ -1,5 +1,7 @@
 package com.example.myapplicationjava;
 
+import android.os.Environment;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -7,15 +9,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Dictionary {
+class Dictionary {
 
     private List<Learner> data;
     private Learner mCurrentLearn;
     private File mFile;
+    private int ind;
 
     Dictionary() {
         data = new ArrayList();
-        mFile = new File("/sdcard/download/dctnr.txt");
+        mFile = new File(Environment.getDownloadCacheDirectory().getPath() + "/dctnr.txt");
         Scanner input;
 
         try {
@@ -31,28 +34,25 @@ public class Dictionary {
 
     }
 
-    public void pickToLearn() {
+    void pickToLearn() {
         Random rand = new Random();
         String[] p = {"","","","",""};
 
         if (data.size() == 0)
             mCurrentLearn = new Learner(p);
         else {
-            int randIndex = rand.nextInt(10);
+            int randIndex = rand.nextInt(data.size());
             mCurrentLearn = data.get(randIndex);
+            ind = rand.nextInt(2);
         }
 
     }
 
-    public String getEng() {
-        return mCurrentLearn.getWord1();
+    String getWord() {
+        return mCurrentLearn.getWord(ind);
     }
 
-    public String getRus() {
-        return mCurrentLearn.getWord2();
-    }
-
-    public String getTranslation(String toTranslate) {
-        return mCurrentLearn.getTranslation(toTranslate);
+    String getTranslation(String toTranslate) {
+        return mCurrentLearn.getWord(1 - ind);
     }
 }

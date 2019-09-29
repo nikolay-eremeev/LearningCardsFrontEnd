@@ -1,23 +1,29 @@
 package com.example.myapplicationjava;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
     
     private TextView mTextViewLearnWord;
     private TextView mTextViewResult;
+    private TextView mTextViewRemember;
+
     private EditText mEditTextUserInput;
+    private Button mButtonNext;
+    private Button mButtonClean;
     private Dictionary mDictionary;
 
     @Override
@@ -34,9 +40,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mTextViewLearnWord = findViewById(R.id.textView);
-        mTextViewLearnWord.setText(mDictionary.getEng());
+        mTextViewLearnWord.setText(mDictionary.getWord());
+
+        mTextViewRemember = findViewById(R.id.textView4);
+        mTextViewRemember.setText(mDictionary.getWord());
 
         mTextViewResult = findViewById(R.id.textView2);
+
+        mButtonNext = findViewById(R.id.button2);
+        mButtonClean = findViewById(R.id.button3);
 
         mEditTextUserInput = findViewById(R.id.editText);
         mEditTextUserInput.addTextChangedListener(new TextWatcher() {
@@ -63,11 +75,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mButtonNext.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mTextViewRemember.setText(
+                        mDictionary.getWord() + "\n" +
+                                mDictionary.getTranslation(mDictionary.getWord())
+                );
+                pickWord();
+            }
+        });
+
+        mButtonClean.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mEditTextUserInput.getText().clear();
+            }
+        });
+
     }
 
     public void pickWord() {
         mDictionary.pickToLearn();
-        mTextViewLearnWord.setText(mDictionary.getEng());
+        mTextViewLearnWord.setText(mDictionary.getWord());
     }
 
 }

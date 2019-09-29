@@ -2,7 +2,7 @@ package com.example.myapplicationjava;
 
 public class Learner {
 
-    public Learner (String [] args) {
+    Learner(String[] args) {
         this.mLanguage1 = args[0];
         this.mLanguage2 = args[1];
         this.mWord1 = args[2];
@@ -24,23 +24,16 @@ public class Learner {
     }
 
     public double getScore() {
-        final double score = 1 / mRate;
-        return score;
+        return 1.0 / mRate;
     }
 
-    public String getWord1 () {
-        return mWord1;
-    }
-
-    public String getWord2() {
-        return mWord2;
-    }
-
-    public String getTranslation(String word) {
-        if (word.equals(mWord2))
+    String getWord(int nr) {
+        if (nr == 0)
             return mWord1;
-        else
+        else if (nr == 1)
             return mWord2;
+        else
+            return "";
     }
 
 }
