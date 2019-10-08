@@ -2,7 +2,6 @@ package com.example.myapplicationjava;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,33 +23,55 @@ public class MainActivity extends AppCompatActivity {
     private EditText mEditTextUserInput;
     private Button mButtonNext;
     private Button mButtonClean;
-    private Dictionary mDictionary;
+    private LearningCards mLearningCards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mDictionary = new Dictionary();
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    2);
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+                // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted TODO handling
         }
 
-        mTextViewLearnWord = findViewById(R.id.textView);
-        mTextViewLearnWord.setText(mDictionary.getWord());
+        mLearningCards = new LearningCards(this.getBaseContext());
 
-        mTextViewRemember = findViewById(R.id.textView4);
-        mTextViewRemember.setText(mDictionary.getWord());
+        mTextViewLearnWord = findViewById(R.id.textViewLearnWord);
+        mTextViewLearnWord.setText(mLearningCards.getWord());
 
-        mTextViewResult = findViewById(R.id.textView2);
+        mTextViewRemember = findViewById(R.id.textViewRemember);
+        mTextViewRemember.setText(mLearningCards.getWord());
 
-        mButtonNext = findViewById(R.id.button2);
-        mButtonClean = findViewById(R.id.button3);
+        mTextViewResult = findViewById(R.id.textViewResult);
 
-        mEditTextUserInput = findViewById(R.id.editText);
+        mButtonNext = findViewById(R.id.buttonNext);
+        mButtonClean = findViewById(R.id.buttonClean);
+
+        mEditTextUserInput = findViewById(R.id.editTextUserInput);
+
         mEditTextUserInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -60,27 +81,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String userText = mEditTextUserInput.getText().toString();
-                String questionedText = mTextViewLearnWord.getText().toString();
-                if (userText.equals("")) {
-                    mTextViewResult.setText("ENTER THE TRANSLATION");
-                    mTextViewResult.setTextColor(Color.BLACK);
-                } else if (mDictionary.getTranslation(questionedText).equals(userText)) {
-                    mTextViewResult.setText("GOOD, NEXT WORD IS:");
-                    mTextViewResult.setTextColor(Color.GREEN);
+                if (userText.isEmpty()) {
+                    mTextViewResult.setText(getResources().getString(R.string.empty));
+                    mTextViewResult.setTextColor(getResources().getColor(R.color.colorText));
+                } else if (mLearningCards.isTranslationRight(userText)) {
+                    mTextViewResult.setText(getResources().getString(R.string.title_right_answer));
+                    mTextViewResult.setTextColor(getResources().getColor(R.color.colorRightAnswer));
                     pickWord();
                 } else {
-                    mTextViewResult.setText("FALSE");
-                    mTextViewResult.setTextColor(Color.RED);
+                    mTextViewResult.setText(getResources().getString(R.string.title_wrong_answer));
+                    mTextViewResult.setTextColor(getResources().getColor(R.color.colorWrongAnswer));
                 }
             }
         });
 
         mButtonNext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mTextViewRemember.setText(
-                        mDictionary.getWord() + "\n" +
-                                mDictionary.getTranslation(mDictionary.getWord())
-                );
+                mTextViewRemember.setText(mLearningCards.getWord() + "\n" + mLearningCards.getTranslation());
+                mEditTextUserInput.getText().clear();
                 pickWord();
             }
         });
@@ -94,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pickWord() {
-        mDictionary.pickToLearn();
-        mTextViewLearnWord.setText(mDictionary.getWord());
+        mLearningCards.pickWordToLearn();
+        mTextViewLearnWord.setText(mLearningCards.getWord());
     }
 
 }

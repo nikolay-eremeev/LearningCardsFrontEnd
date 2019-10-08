@@ -1,8 +1,14 @@
 package com.example.myapplicationjava;
 
-public class Learner {
+public class Card {
 
-    Learner(String[] args) {
+    private String mLanguage1;
+    private String mLanguage2;
+    private String mWord1;
+    private String mWord2;
+    private double mRate;
+
+    Card(String[] args) {
         this.mLanguage1 = args[0];
         this.mLanguage2 = args[1];
         this.mWord1 = args[2];
@@ -13,11 +19,6 @@ public class Learner {
             this.mRate = Double.parseDouble(args[4]);
     }
 
-    private String mLanguage1;
-    private String mLanguage2;
-    private String mWord1;
-    private String mWord2;
-    private double mRate;
 
     public double getRate() {
         return mRate;
@@ -33,6 +34,7 @@ public class Learner {
         else if (nr == 1)
             return mWord2;
         else
+            //TODO log error - nt must be 0 or 1
             return "";
     }
 

@@ -36,15 +36,16 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="120dp"
+        android:autofillHints=""
         android:ems="10"
         android:gravity="center"
+        android:hint="@string/title_text_edit_empty"
         android:inputType="textPersonName"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:hint="@string/title_text_edit_empty"
         app:layout_constraintVertical_bias="0.060000002" />
 
     <TextView
