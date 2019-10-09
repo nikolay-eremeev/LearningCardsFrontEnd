@@ -1,41 +1,59 @@
 package com.example.myapplicationjava;
 
-public class Card {
+class Card {
 
-    private String mLanguage1;
-    private String mLanguage2;
-    private String mWord1;
-    private String mWord2;
-    private double mRate;
+    private String language1;
+    private String language2;
+    private String word1;
+    private String word2;
+    private double score;
+    private double rate;
+
 
     Card(String[] args) {
-        this.mLanguage1 = args[0];
-        this.mLanguage2 = args[1];
-        this.mWord1 = args[2];
-        this.mWord2 = args[3];
-        if (args.length == 4)
-            this.mRate = 1.0;
-        else
-            this.mRate = Double.parseDouble(args[4]);
+        this.language1 = args[0];
+        this.language2 = args[1];
+        this.word1 = args[2];
+        this.word2 = args[3];
+        if (args.length == 4) {
+            this.score = 1.0;
+            this.rate = 1.0;
+        } else {
+            this.score = Double.parseDouble(args[4]);
+            this.rate = 1.0 / score;
+        }
+
     }
 
 
-    public double getRate() {
-        return mRate;
+    double getRate() {
+        return 1.0 / score;
     }
 
-    public double getScore() {
-        return 1.0 / mRate;
+    double getScore() {
+        return score;
     }
 
     String getWord(int nr) {
-        if (nr == 0)
-            return mWord1;
-        else if (nr == 1)
-            return mWord2;
-        else
-            //TODO log error - nt must be 0 or 1
-            return "";
+        switch (nr) {
+            case (0):
+                return word1;
+            case (1):
+                return word2;
+        }
+
+        //TODO log error - nt must be 0 or 1
+        return "";
+    }
+
+    void answerWrong() {
+        score /= 2;
+        rate = 1.0 / score;
+    }
+
+    void answerRight() {
+        score *= 1.5;
+        rate = 1.0 / score;
     }
 
 }

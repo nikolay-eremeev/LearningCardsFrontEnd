@@ -2,6 +2,7 @@ package com.example.myapplicationjava;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,8 +12,10 @@ import java.util.Scanner;
 
 class LearningCards {
 
+    private static final String TAG = "LearningCards";
     private ArrayList<Card> mData;
     private Card mCurrentCard;
+    private int mCurrentCardNr;
     private int mCurrentWordNr;
 
     LearningCards(Context context) {
@@ -26,7 +29,7 @@ class LearningCards {
                 mData.add(new Card(input.nextLine().split("\t")));
             }
         } catch (FileNotFoundException e) {
-            //TODO log e.getMessage());
+            e.printStackTrace();
         }
 
         this.pickWordToLearn();
@@ -38,11 +41,10 @@ class LearningCards {
         Random rand = new Random();
 
         if (mData.size() == 0) {
-            //TODO handle the case when mData has no entries
-        }
-        else {
-            int randIndex = rand.nextInt(mData.size());
-            mCurrentCard = mData.get(randIndex);
+            Log.w(TAG, "There are no cards, please check input file");
+        } else {
+            mCurrentCardNr = rand.nextInt(mData.size());
+            mCurrentCard = mData.get(mCurrentCardNr);
             mCurrentWordNr = rand.nextInt(2);
         }
 
@@ -56,11 +58,41 @@ class LearningCards {
         return mCurrentCard.getWord(1 - mCurrentWordNr);
     }
 
+    double getScore() {
+        return mCurrentCard.getScore();
+    }
+
+    double getRate() {
+        return mCurrentCard.getRate();
+    }
+
     boolean isTranslationRight(String userText) {
 
-        String userTextTmp = userText.replaceAll("[^a-zA-Z а-яА-Я]", "").toLowerCase();
-        String translation = this.getTranslation().replaceAll("[^a-zA-Z а-яА-Я]", "").toLowerCase();
+        String userTextTmp = formatString(userText);
+        String translation = formatString(this.getTranslation());
 
-        return userTextTmp.equals(translation);
+        if (userTextTmp.equals(translation)) {
+            mCurrentCard.answerRight();
+            mData.set(mCurrentCardNr, mCurrentCard);
+            return true;
+        } else {
+            mCurrentCard.answerWrong();
+            mData.set(mCurrentCardNr, mCurrentCard);
+            return false;
+        }
+
     }
+
+    void answerRight() {
+        mCurrentCard.answerRight();
+    }
+
+    void answerWrong() {
+        mCurrentCard.answerWrong();
+    }
+
+    private String formatString(String str) {
+        return str.replaceAll("[^a-zA-Zа-яА-Я]", "").toLowerCase();
+    }
+
 }
