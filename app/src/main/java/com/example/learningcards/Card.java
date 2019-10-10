@@ -1,4 +1,4 @@
-package com.example.myapplicationjava;
+package com.example.learningcards;
 
 class Card {
 
@@ -8,7 +8,6 @@ class Card {
     private String word2;
     private double score;
     private double rate;
-
 
     Card(String[] args) {
         this.language1 = args[0];
@@ -22,12 +21,10 @@ class Card {
             this.score = Double.parseDouble(args[4]);
             this.rate = 1.0 / score;
         }
-
     }
 
-
     double getRate() {
-        return 1.0 / score;
+        return rate;
     }
 
     double getScore() {
@@ -40,19 +37,18 @@ class Card {
                 return word1;
             case (1):
                 return word2;
+            default:
+                //TODO log error - nt must be 0 or 1
+                return "";
         }
-
-        //TODO log error - nt must be 0 or 1
-        return "";
     }
 
-    void answerWrong() {
-        score /= 2;
-        rate = 1.0 / score;
-    }
-
-    void answerRight() {
-        score *= 1.5;
+    void answer(boolean isAnswerRight) {
+        if (isAnswerRight) {
+            score /= 2;
+        } else {
+            score *= 1.5;
+        }
         rate = 1.0 / score;
     }
 
