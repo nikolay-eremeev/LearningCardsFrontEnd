@@ -45,9 +45,9 @@ class Card {
 
     void answer(boolean isAnswerRight) {
         if (isAnswerRight) {
-            score /= 2;
-        } else {
             score *= 1.5;
+        } else {
+            score /= 2;
         }
         rate = 1.0 / score;
     }
