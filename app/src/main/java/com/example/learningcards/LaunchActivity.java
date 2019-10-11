@@ -1,11 +1,16 @@
 package com.example.learningcards;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class LaunchActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,8 +30,18 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.buttonClean).setOnClickListener(this);
         findViewById(R.id.buttonNext).setOnClickListener(this);
 
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    0);
+        }
+
+        String dctPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + getString(R.string.dct_file_name);
+
         if (myLearningCards == null)
-            myLearningCards = new LearningCards(this);
+            myLearningCards = new LearningCards(dctPath);
 
         userInputEditText.setHint(myLearningCards.getWord());
         rememberTextView.setText(myLearningCards.getRememberString());
@@ -52,6 +67,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                     resultColor = getResources().getColor(R.color.colorAccent);
                     resultTitle = getResources().getString(R.string.title_wrong_answer);
                 }
+
 
                 resultTextView.setText(resultTitle);
                 resultTextView.setTextColor(resultColor);
@@ -83,8 +99,8 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //TODO save user's LearningCards
+    protected void onStop() {
+        super.onStop();
+        //TODO save user's LearningCardsImpl
     }
 }
