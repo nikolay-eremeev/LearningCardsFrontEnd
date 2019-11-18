@@ -6,8 +6,7 @@ class Card {
     private String language2;
     private String word1;
     private String word2;
-    private double score;
-    private double rate;
+    private int score;
 
     Card(String[] args) {
         this.language1 = args[0];
@@ -15,24 +14,22 @@ class Card {
         this.word1 = args[2];
         this.word2 = args[3];
         if (args.length == 4) {
-            this.score = 1.0;
-            this.rate = 1.0;
+            this.score = 0;
         } else {
-            this.score = Double.parseDouble(args[4]);
-            this.rate = 1.0 / score;
+            this.score = Integer.parseInt(args[4]);
         }
     }
 
-    double getRate() {
-        return rate;
-    }
-
-    double getScore() {
+    int getScore() {
         return score;
     }
 
-    String getWord(int nr) {
-        switch (nr) {
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    String getWord(int activeWordNumber) {
+        switch (activeWordNumber) {
             case (0):
                 return word1;
             case (1):
@@ -43,13 +40,37 @@ class Card {
         }
     }
 
-    void answer(boolean isAnswerRight) {
-        if (isAnswerRight) {
-            score *= 1.5;
-        } else {
-            score /= 2;
-        }
-        rate = 1.0 / score;
+    void pushAnswer(boolean isAnswerRight) {
+        if (isAnswerRight)
+            score++;
+        else
+            score--;
+
     }
 
+    public String getWordLanguage(int activeWordNumber) {
+        switch (activeWordNumber) {
+            case (0):
+                return language1;
+            case (1):
+                return language2;
+            default:
+                //TODO log error - nt must be 0 or 1
+                return "";
+        }
+
+    }
+
+    public String getTranslationLanguage(int activeWordNumber) {
+        switch (activeWordNumber) {
+            case (0):
+                return language1;
+            case (1):
+                return language2;
+            default:
+                //TODO log error - nt must be 0 or 1
+                return "";
+        }
+
+    }
 }
