@@ -93,5 +93,15 @@
         app:layout_constraintStart_toEndOf="@+id/editTextUserInput"
         app:layout_constraintTop_toTopOf="@+id/editTextUserInput" />
 
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tts_switch"
+        app:layout_constraintBottom_toTopOf="@+id/textViewRemember"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonNext"
+        app:layout_constraintTop_toBottomOf="@+id/editTextUserInput" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
