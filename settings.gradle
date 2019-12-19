@@ -1,2 +1,2 @@
-include ':app'
+include ':LearningCards'
 rootProject.name = 'LearningCardsFrontEnd'
