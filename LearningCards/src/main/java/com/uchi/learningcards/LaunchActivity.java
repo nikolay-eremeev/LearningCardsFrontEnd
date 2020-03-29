@@ -8,6 +8,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -28,7 +29,7 @@ import static android.speech.tts.TextToSpeech.QUEUE_ADD;
 public class LaunchActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = LaunchActivity.class.getSimpleName();
-    static private ILearningCards myLearningCards;
+    static private LearningCards myLearningCards;
     boolean isTtsOn = false;
     private TextView resultTextView;
     private TextView rememberTextView;
@@ -67,6 +68,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+
         new Thread() {
             public void run() {
                 if (myLearningCards == null) {
@@ -84,13 +86,18 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                     assert jsonObject != null;
                     String host = Objects.requireNonNull(jsonObject.get("hostname")).toString();
                     int port = ((Long) Objects.requireNonNull(jsonObject.get("port"))).intValue();
-                    myLearningCards = new LearningCards(host, port);
+                    try {
+                        myLearningCards = new LearningCards(host, port);
+                        userInputEditText.setHint(myLearningCards.getWord());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 }
-                userInputEditText.setHint(myLearningCards.getWord());
 
             }
         }.start();
+
     }
 
     @Override
@@ -98,7 +105,7 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.buttonNext:
                 if (myLearningCards == null) {
-                    Log.e(TAG, "LearningCards are not initialized");
+                    Toast.makeText(LaunchActivity.this, "Learning Cards are not initialized, please check connection", Toast.LENGTH_LONG).show();
                     break;
                 }
 
