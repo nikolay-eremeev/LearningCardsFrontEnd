@@ -1,2 +1,2 @@
-include ':app'
-rootProject.name = 'LearningCards'
+include ':LearningCards'
+rootProject.name = 'LearningCardsFrontEnd'

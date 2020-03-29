@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">Learning Cards</string>
-    <string name="dct_file_name">dctnr.txt</string>
     <string name="title_right_answer">GOOD, NEXT WORD IS:</string>
     <string name="title_wrong_answer">FALSE</string>
     <string name="title_text_edit_empty">ENTER THE TRANSLATION</string>
     <string name="button_next_title">CHECK / NEXT</string>
+    <string name="tts_switch">Spelling</string>
+    <string name="translation_to_show">%1$s\n\n%2$s\n\n%3$d</string>
 </resources>
