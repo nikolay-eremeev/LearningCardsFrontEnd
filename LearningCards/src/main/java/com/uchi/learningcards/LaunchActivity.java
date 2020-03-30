@@ -1,7 +1,9 @@
 package com.uchi.learningcards;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -121,17 +124,29 @@ public class LaunchActivity extends AppCompatActivity implements View.OnClickLis
                     else if (myLearningCards.getTranslationLanguage().equals("Russian"))
                         myTTS.setLanguage(new Locale("ru"));
 
-                    myTTS.speak(myLearningCards.getTranslations().get(0), QUEUE_ADD, null, "id");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        myTTS.speak(myLearningCards.getTranslations().get(0), QUEUE_ADD, null, "id");
+                    } else {
+                        HashMap<String, String> params = new HashMap<>();
+                        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "id");
+                        myTTS.speak(myLearningCards.getTranslations().get(0), QUEUE_ADD, params);
+                    }
 
                     if (myLearningCards.getWordLanguage().equals("English"))
                         myTTS.setLanguage(Locale.US);
                     else if (myLearningCards.getWordLanguage().equals("Russian"))
                         myTTS.setLanguage(new Locale("ru"));
 
-                    myTTS.speak(myLearningCards.getWord(), QUEUE_ADD, null, "id");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        myTTS.speak(myLearningCards.getWord(), QUEUE_ADD, null, "id");
+                    } else {
+                        HashMap<String, String> params = new HashMap<>();
+                        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "id");
+                        myTTS.speak(myLearningCards.getTranslations().get(0), QUEUE_ADD, params);
+                    }
                 }
 
-                rememberTextView.setText(getString(R.string.translation_to_show, myLearningCards.getWord(), String.join("; ", myLearningCards.getTranslations()), myLearningCards.getScore()));
+           /*String.join*/     rememberTextView.setText(getString(R.string.translation_to_show, myLearningCards.getWord(), TextUtils.join("; ", myLearningCards.getTranslations()), myLearningCards.getScore()));
 
                 boolean isAnswerRight = myLearningCards.pushAnswer(userText);
 
